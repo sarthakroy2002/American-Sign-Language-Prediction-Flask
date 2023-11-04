@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>American Sign Language Prediction</title>
+    <style>
+        body{
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            background-color: aqua;
+        }
+
+        .header {
+            margin: 0 auto;
+            text-align: center;
+
+        }
+        
+        .centered-div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #predict{
+            background-color : rgb(76, 68, 185);
+            color : white;
+            padding: 15px 32px;
+            border-radius: 25px;
+            border: 0px;
+            transition-duration: 0.4s;
+            width: 150px;
+            height: 50px;
+        }
+        #predict:hover{
+            background-color : rgb(66, 59, 160);
+            width: 160px;
+            height: 55px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="centered-div header">
+        <h1>American Sign Language Prediction</h1>
+    </div>
+    <div class="centered-div">
+        <img id="video_feed" src="{{ url_for('video_feed') }}" style="border-radius: 25px; border: 2px solid blue;" />
+        <h3>Predicted Alphabet: {{ predicted_class }}</h3>
+        <br>
+        <button type="submit" form="capture_image" id="predict">Predict</button>
+        <form id="capture_image" action="/capture_image" method="POST" onclick="location.href='/';return false;"></form>
+    </div>
+    
+    <script>
+        $(document).ready(function() {
+            $("#capture_image").on('click', function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: "/capture_image",
+                    method: "POST",
+                    success: function(response) {
+                        $("#video_feed").attr('src', response.video_feed);
+                        $("#predicted_class").text(response.predicted_class);
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+
+    </script>
+</body>
+</html>
